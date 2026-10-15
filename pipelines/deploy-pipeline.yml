@@ -1,0 +1,41 @@
+# Starter contract only. Add target-specific jobs after deciding exact deployment targets.
+name: Reusable Deploy
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        type: string
+        required: true
+      artifact-version:
+        type: string
+        required: true
+      target:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Validate deployment request
+        env:
+          SERVICE_NAME: ${{ inputs.service-name }}
+          ARTIFACT_VERSION: ${{ inputs.artifact-version }}
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -eu
+          case "$TARGET" in
+            local|aws|hostinger) ;;
+            *) echo "Unsupported target"; exit 1 ;;
+          esac
+          test -n "$SERVICE_NAME"
+          test -n "$ARTIFACT_VERSION"
+          echo "Request validated. Target adapter is not implemented yet."

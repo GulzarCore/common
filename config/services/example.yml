@@ -1,0 +1,11 @@
+service: example-service
+language: kotlin
+java_version: "21"
+build_command: "./gradlew --no-daemon build"
+libraries: []
+deployment:
+  allowed_targets:
+    - local
+    - aws
+    - hostinger
+  default_environment: development
